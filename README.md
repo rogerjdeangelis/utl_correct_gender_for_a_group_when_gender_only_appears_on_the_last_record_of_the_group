@@ -1,0 +1,2 @@
+# utl_correct_gender_for_a_group_when_gender_only_appears_on_the_last_record_of_the_group
+Correct gender for a group when gender only appears on the last record of the group.  Keywords: sas sql join merge big data analytics macros oracle teradata mysql sas communities stackoverflow statistics artificial inteligence AI Python R Java Javascript WPS Matlab SPSS Scala Perl C C# Excel MS Access JSON graphics maps NLP natural language processing machine learning igraph DOSUBL DOW loop stackoverflow SAS community.
