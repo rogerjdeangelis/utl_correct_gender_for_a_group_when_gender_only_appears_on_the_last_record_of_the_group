@@ -13,6 +13,8 @@ Correct gender for a group when gender only appears on the last record of the gr
            2. Merge
            3. Proc SQL
            4. Hash
+            
+           see additional solutions on end by Bart Jablonski
 
     github
     https://tinyurl.com/y7jm94wm
@@ -244,4 +246,84 @@ Correct gender for a group when gender only appears on the last record of the gr
        proc print;run;quit;
        run;quit;
     ');
+
+
+    *____             _
+    | __ )  __ _ _ __| |_
+    |  _ \ / _` | '__| __|
+    | |_) | (_| | |  | |_
+    |____/ \__,_|_|   \__|
+
+    ;
+
+    data want(rename=(s=sex));
+
+    do point = nobs to 1 by -1;
+        set have nobs = nobs point = point;
+        retain s " ";
+        s = coalescec(sex, s);
+        drop sex;
+        output;
+    end;
+
+    stop;
+
+
+    Paul,
+
+    one more try, but a little bit more "bullet proof" now :-)
+
+    all the best
+    Bart
+
+    /**/
+    data have;
+    infile cards missover;
+    input COURSE  $   NAME  $     SEX $;
+    cards;
+    HOME_EC    Alice
+    HOME_EC    Barbara
+    HOME_EC    Carol
+    HOME_EC    Jane
+    HOME_EC    Janet F
+    HOME_EC    Joyce
+    HOME_EC    Judy
+    HOME_EC    Louise
+    HOME_EC    Mary
+    SHOP       Alfred
+    SHOP       Henry
+    SHOP       James
+    SHOP       Jeffrey M
+    SHOP       John
+    SHOP       Philip
+    SHOP       Robert
+    SHOP       Ronald
+    SHOP       Thomas
+    SHOP       William
+    ;
+    run;
+
+
+    data want(rename=(s=sex));
+    if 0 then set have;
+    declare hash class(dataset: "have", multidata: "yes", ordered: "d");
+    _rc_ = class.DefineKey("COURSE", "SEX");
+    _rc_ = class.DefineData(ALL: "yes");
+    _rc_ = class.DefineDone();
+    declare hiter iclass('class');
+    drop _rc_;
+
+    retain s " ";
+    drop sex;
+
+    _rc_ = iclass.first();
+    do while(_rc_ = 0);
+        s = coalescec(sex, s);
+        output;
+        _rc_ = iclass.next();
+    end;
+
+    stop;
+    run;
+
 
